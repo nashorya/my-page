@@ -1,0 +1,42 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { novels } from "../../../data/generated";
+import { byOrder, chapterPath, slugTail } from "../../../lib/content";
+
+export function getStaticPaths() {
+  return novels.map((novel) => ({
+    params: { novel: novel.id },
+    props: { novel },
+  }));
+}
+
+const { novel } = Astro.props;
+const chapters = (await getCollection("novels"))
+  .filter((entry) => entry.data.novel === novel.id)
+  .sort(byOrder);
+---
+
+<BaseLayout title={`${novel.title} · 日暮途远`} active="novels">
+  <div class="novel-hub page-enter">
+    <a class="read-back" href="/novels/">返回小说</a>
+    <div class="novel-hero">
+      <span class="label">长篇 · {novel.status}</span>
+      <h1>《{novel.title}》</h1>
+      <div class="sub">{novel.subtitle}</div>
+      <p class="syn">{novel.synopsis}</p>
+      <div class="meta">
+        <span>{novel.date}</span>
+        <span>共 {chapters.length} 章</span>
+      </div>
+    </div>
+    <div class="ch-list">
+      {chapters.map((chapter) => (
+        <a class="ch" href={chapterPath(novel.id, slugTail(chapter.id))}>
+          <span class="n">{String(chapter.data.order).padStart(2, "0")}</span>
+          <span class="ct">{chapter.data.title}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

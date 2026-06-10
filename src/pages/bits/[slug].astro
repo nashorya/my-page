@@ -1,0 +1,30 @@
+---
+import { getCollection, render } from "astro:content";
+import ReadingLayout from "../../layouts/ReadingLayout.astro";
+
+export async function getStaticPaths() {
+  const bits = await getCollection("bits");
+  return bits.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ReadingLayout
+  title={entry.data.title}
+  sub={entry.data.sub}
+  kind="— 段子 —"
+  date={entry.data.date}
+  reading={entry.data.reading}
+  backHref="/essays/"
+  backLabel="返回"
+  active="essays"
+>
+  <div class="read-body">
+    <Content />
+  </div>
+</ReadingLayout>

@@ -1,0 +1,32 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  sub?: string;
+  kind: string;
+  date?: string;
+  reading?: string;
+  backHref: string;
+  backLabel: string;
+  active?: "novels" | "essays";
+}
+
+const { title, sub = "", kind, date = "", reading = "", backHref, backLabel, active = "novels" } = Astro.props;
+---
+
+<BaseLayout title={`${title} · 日暮途远`} active={active}>
+  <div class="read-page page-enter">
+    <a class="read-back" href={backHref}>{backLabel}</a>
+    <div class="read-meta">
+      <span class="kind">{kind}</span>
+      {date && <span>{date}</span>}
+      {(date || reading) && <span>·</span>}
+      {reading && <span>{reading}</span>}
+    </div>
+    <h1 class="read-title">{title}</h1>
+    {sub && <div class="read-sub">{sub}</div>}
+    <span class="read-rule"></span>
+    <slot />
+  </div>
+</BaseLayout>

@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from "astro:content";
+import ReadingLayout from "../../../layouts/ReadingLayout.astro";
+import Pager from "../../../components/Pager.astro";
+import { novels } from "../../../data/generated";
+import { byOrder, chapterPath, slugTail } from "../../../lib/content";
+
+export async function getStaticPaths() {
+  const chapters = await getCollection("novels");
+  return chapters.map((entry) => ({
+    params: {
+      novel: entry.data.novel,
+      chapter: slugTail(entry.id),
+    },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const novel = novels.find((item) => item.id === entry.data.novel);
+const chapters = (await getCollection("novels")).filter((item) => item.data.novel === entry.data.novel).sort(byOrder);
+const index = chapters.findIndex((item) => item.id === entry.id);
+const prev = index > 0 ? chapters[index - 1] : undefined;
+const next = index < chapters.length - 1 ? chapters[index + 1] : undefined;
+const { Content } = await render(entry);
+---
+
+<ReadingLayout
+  title={entry.data.title}
+  kind={`第 ${String(entry.data.order).padStart(2, "0")} 章`}
+  backHref={`/novels/${entry.data.novel}/`}
+  backLabel={`返回 《${novel?.title || ""}》`}
+  active="novels"
+>
+  <div class="read-body">
+    <Content />
+  </div>
+  <Pager
+    prevHref={prev ? chapterPath(entry.data.novel, slugTail(prev.id)) : undefined}
+    prevLabel={prev ? "上一章" : undefined}
+    centerHref={`/novels/${entry.data.novel}/`}
+    centerLabel="章节目录"
+    nextHref={next ? chapterPath(entry.data.novel, slugTail(next.id)) : undefined}
+    nextLabel={next ? "下一章" : undefined}
+  />
+</ReadingLayout>

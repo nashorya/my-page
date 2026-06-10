@@ -1,0 +1,65 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionHead from "../../components/SectionHead.astro";
+import { collections as collectionMetas, novels } from "../../data/generated";
+import { byOrder, collectionPiecePath, slugTail } from "../../lib/content";
+
+const collectionEntries = (await getCollection("collections")).filter((entry) => !entry.data.appendix).sort(byOrder);
+const piecesByCollection = new Map<string, typeof collectionEntries>();
+for (const collection of collectionMetas) {
+  piecesByCollection.set(collection.id, collectionEntries.filter((entry) => entry.data.collection === collection.id).sort(byOrder));
+}
+---
+
+<BaseLayout title="小说 · 日暮途远" active="novels">
+  <div class="wrap page-enter">
+    <section class="sec" style="margin-top: 60px;">
+      <SectionHead hand="两本小说集" en="COLLECTIONS" />
+      <div class="col-grid">
+        {collectionMetas.map((collection) => {
+          const pieces = piecesByCollection.get(collection.id) || [];
+          const firstPiece = pieces[0];
+          return (
+            <a class="col-card reveal" href={firstPiece ? collectionPiecePath(collection.id, slugTail(firstPiece.id)) : "/novels/"}>
+              <span class="label">{collection.dedication ? "小说集" : "短篇集"}</span>
+              <h3>《{collection.name}》</h3>
+              {collection.dedication && <div class="dedi">{collection.dedication}</div>}
+              <div class="pieces">
+                {pieces.map((piece, index) => (
+                  <div class="p">
+                    <span class="n">{String(index + 1).padStart(2, "0")}</span>
+                    <span class="t">{piece.data.title}</span>
+                  </div>
+                ))}
+              </div>
+              <span class="more">翻开</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="sec">
+      <SectionHead hand="在写的长篇" en="NOVELS · WIP" />
+      <div class="novel-grid">
+        {novels.map((novel) => {
+          const cls = novel.id.includes("miso") ? "miso" : "weird";
+          return (
+            <a class={`novel-card ${cls} reveal`} href={`/novels/${novel.id}/`}>
+              <span class="stamp">{novel.status}</span>
+              <span class="label">长篇连载</span>
+              <h3>《{novel.title}》</h3>
+              <div class="sub">{novel.subtitle}</div>
+              <p>{novel.synopsis}</p>
+              <div class="meta">
+                <span>{novel.date}</span>
+                <span class="chs">{novel.chapters.length} 章</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

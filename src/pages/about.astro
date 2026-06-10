@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { projects } from "../data/generated";
+import { countText } from "../lib/content";
+
+const collectionPieces = (await getCollection("collections")).filter((entry) => !entry.data.appendix);
+const essays = await getCollection("essays");
+const bits = await getCollection("bits");
+const novelChapters = await getCollection("novels");
+const totalPieces = collectionPieces.length + essays.length + bits.length;
+const totalChapters = novelChapters.length;
+const totalChars = [...collectionPieces, ...essays, ...bits, ...novelChapters].reduce((sum, entry) => sum + countText(entry.body), 0);
+---
+
+<BaseLayout title="关于 · 日暮途远" active="about">
+  <div class="about-page page-enter">
+    <h1>关于<span class="accent">我</span></h1>
+    <p>
+      <span class="hl">22 岁的学生</span>，一个每天在「明天再写」和「今晚得睡」之间反复横跳的人。
+      写代码也写字，做的项目都跟 AI 沾点边。
+    </p>
+    <p>
+      这个站起名「日暮途远」，是因为我喜欢那句老话「日暮途远，马瘦毛长」——
+      天快黑了，路还很远，马又瘦，毛长得乱。听上去够狼狈，可我偏喜欢这股劲儿：
+      再狼狈，马也还在往前走。这里就是这匹瘦马一路上掉下的脚印。
+    </p>
+    <p style="font-style: italic;">
+      PS：站点是我和 Claude 一起搭的，文字全部出自我手。如果你看到错别字，那就是我的。
+    </p>
+
+    <div class="about-stats">
+      <div class="about-stat"><div class="n">{totalPieces}</div><div class="l">中短篇 · 随笔</div></div>
+      <div class="about-stat"><div class="n">{totalChapters}</div><div class="l">长篇章节</div></div>
+      <div class="about-stat"><div class="n">{projects.length}</div><div class="l">真在做的项目</div></div>
+      <div class="about-stat"><div class="n">{Math.round(totalChars / 1000)}<small style="font-size:.4em;margin-left:4px">k</small></div><div class="l">字</div></div>
+    </div>
+
+    <div class="about-links">
+      <a href="https://github.com/student-agent" target="_blank" rel="noopener">GitHub</a>
+      <a class="line" href="mailto:hi@example.com">Mail</a>
+      <a class="line" href="/novels/">看小说</a>
+    </div>
+  </div>
+</BaseLayout>

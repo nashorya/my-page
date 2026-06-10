@@ -1,0 +1,34 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/generated";
+
+interface Props {
+  title?: string;
+  active?: "home" | "novels" | "essays" | "projects" | "about";
+}
+
+const { title = site.title, active = "home" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Quicksand:wght@400;500;600;700&family=Noto+Serif+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div style="min-height: 100vh; display: flex; flex-direction: column;">
+      <Nav active={active} />
+      <main style="flex: 1;">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

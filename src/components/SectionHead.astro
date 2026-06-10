@@ -1,0 +1,16 @@
+---
+interface Props {
+  hand: string;
+  en: string;
+}
+
+const { hand, en } = Astro.props;
+---
+
+<div class="sec-head">
+  <span class="hand">{hand}</span>
+  <span class="en">{en}</span>
+  <svg class="squiggle ln" viewBox="0 0 200 6" fill="none" preserveAspectRatio="none">
+    <path d="M0 3 Q25 0 50 3 T100 3 T150 3 T200 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+  </svg>
+</div>

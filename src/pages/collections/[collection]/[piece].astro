@@ -1,0 +1,72 @@
+---
+import { getCollection, render } from "astro:content";
+import ReadingLayout from "../../../layouts/ReadingLayout.astro";
+import Pager from "../../../components/Pager.astro";
+import { collections as collectionMetas } from "../../../data/generated";
+import { byOrder, collectionPiecePath, slugTail } from "../../../lib/content";
+
+export async function getStaticPaths() {
+  const entries = (await getCollection("collections")).filter((entry) => !entry.data.appendix);
+  return entries.map((entry) => ({
+    params: {
+      collection: entry.data.collection,
+      piece: slugTail(entry.id),
+    },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const collection = collectionMetas.find((item) => item.id === entry.data.collection);
+const entries = (await getCollection("collections"))
+  .filter((item) => item.data.collection === entry.data.collection && !item.data.appendix)
+  .sort(byOrder);
+const appendix = (await getCollection("collections")).find((item) => item.data.parent === slugTail(entry.id));
+const index = entries.findIndex((item) => item.id === entry.id);
+const prev = index > 0 ? entries[index - 1] : undefined;
+const next = index < entries.length - 1 ? entries[index + 1] : undefined;
+const { Content } = await render(entry);
+const renderedAppendix = appendix ? await render(appendix) : undefined;
+const AppendixContent = renderedAppendix?.Content;
+---
+
+<ReadingLayout
+  title={entry.data.title}
+  sub={entry.data.sub}
+  kind={`《${collection?.name || ""}》之`}
+  date={entry.data.date}
+  reading={entry.data.reading}
+  backHref="/novels/"
+  backLabel="返回小说"
+  active="novels"
+>
+  {collection?.preface && index === 0 && (
+    <div style="margin-bottom: 50px; padding: 24px 28px; background: var(--paper-2); border-left: 3px solid var(--blue);">
+      <div class="caveat" style="font-size: 24px; color: var(--blue); margin-bottom: 12px;">{collection.preface.title}</div>
+      <div style="font-size: 15px; line-height: 2; color: var(--ink-soft);">
+        {collection.preface.body.slice(0, 3).map((paragraph) => <p style="margin: 0 0 .7em;">{paragraph}</p>)}
+        {collection.preface.body.length > 3 && <p style="color: var(--ink-faint); font-size: 13px; margin-top: 6px;">……（{collection.preface.body.length - 3} 段省略）</p>}
+      </div>
+    </div>
+  )}
+
+  <div class="read-body">
+    <Content />
+  </div>
+
+  {AppendixContent && (
+    <div class="read-appendix">
+      <h3>{appendix?.data.title}</h3>
+      <div class="read-body">
+        <AppendixContent />
+      </div>
+    </div>
+  )}
+
+  <Pager
+    prevHref={prev ? collectionPiecePath(entry.data.collection, slugTail(prev.id)) : undefined}
+    prevLabel={prev?.data.title}
+    nextHref={next ? collectionPiecePath(entry.data.collection, slugTail(next.id)) : undefined}
+    nextLabel={next?.data.title}
+  />
+</ReadingLayout>

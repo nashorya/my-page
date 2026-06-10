@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方案 C · 手账温度 — 日暮途远</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Quicksand:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --paper:#FAF3E3;--paper-2:#F4E9D0;--ink:#2A2622;--ink-soft:#6A5F50;
+    --blue:#2A3D5C;--rose:#C4664E;--olive:#7B8A50;--cream:#E8D9B5;
+  }
+  html,body{background:var(--paper);min-height:100vh}
+  body{font-family:'Noto Serif SC','Quicksand',serif;color:var(--ink);
+    -webkit-font-smoothing:antialiased;line-height:1.7;
+    background-image:
+      radial-gradient(circle at 18% 28%, rgba(196,102,78,.04) 0%, transparent 30%),
+      radial-gradient(circle at 88% 78%, rgba(42,61,92,.04) 0%, transparent 35%);
+  }
+  ::selection{background:var(--rose);color:var(--paper)}
+  a{color:inherit;text-decoration:none}
+  @keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  @keyframes wiggle{0%,100%{transform:rotate(-1deg)}50%{transform:rotate(.5deg)}}
+
+  .wrap{max-width:1020px;margin:0 auto;padding:32px 44px 80px;position:relative}
+
+  /* nav — 一行手写感 */
+  nav{display:flex;align-items:baseline;gap:30px;animation:fade-up .7s ease both}
+  nav .brand{font-family:'Caveat',cursive;font-weight:700;font-size:34px;color:var(--blue);line-height:1}
+  nav ul{list-style:none;display:flex;gap:26px;margin-left:auto;align-items:baseline}
+  nav a{font-family:'Quicksand',sans-serif;font-size:14px;font-weight:500;color:var(--ink-soft);position:relative;transition:color .25s}
+  nav a:hover{color:var(--rose)}
+  nav a:hover::after{content:'';position:absolute;left:-2px;right:-2px;bottom:-5px;height:6px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 6'%3E%3Cpath d='M0 3 Q15 0 30 3 T60 3' stroke='%23C4664E' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+
+  /* hero */
+  .hero{margin-top:80px;display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:end;animation:fade-up 1s ease both}
+  .hero h1{font-family:'Noto Serif SC',serif;font-weight:700;font-size:clamp(48px,7vw,92px);line-height:1.02;letter-spacing:-.01em}
+  .hero h1 .accent{font-family:'Caveat',cursive;font-weight:700;color:var(--rose);font-size:.95em;display:inline-block;transform:rotate(-2deg);margin-left:-4px}
+  .hero .doodle-line{display:block;width:230px;height:14px;margin:18px 0 0 4px;color:var(--blue)}
+  .hero p{margin-top:24px;font-size:17px;line-height:1.95;color:var(--ink-soft);max-width:480px}
+  .hero p .hl{background:linear-gradient(180deg, transparent 60%, var(--cream) 60%);padding:0 3px}
+  .hero .card-photo{justify-self:end;width:100%;max-width:280px;background:#fff;padding:14px 14px 42px;border:1px solid rgba(42,38,34,.1);box-shadow:6px 8px 24px rgba(42,38,34,.08);transform:rotate(2deg);position:relative}
+  .hero .card-photo .ph{aspect-ratio:1/1.05;background:linear-gradient(135deg,var(--blue) 0%,#3F567E 60%,var(--rose) 100%);display:flex;align-items:flex-end;padding:18px;color:var(--paper);font-family:'Caveat',cursive;font-size:26px;line-height:1.1}
+  .hero .card-photo .cap{font-family:'Caveat',cursive;font-size:20px;color:var(--blue);text-align:center;margin-top:14px;line-height:1}
+
+  /* 章节 */
+  .sec{margin-top:88px;animation:fade-up .8s ease both}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:30px}
+  .sec-head .hand{font-family:'Caveat',cursive;font-size:46px;font-weight:700;color:var(--blue);line-height:1}
+  .sec-head .en{font-family:'Quicksand',sans-serif;font-size:12px;letter-spacing:.18em;color:var(--ink-soft);text-transform:uppercase}
+  .sec-head .squiggle{flex:1;height:8px;color:var(--rose)}
+
+  /* 项目卡片：贴纸感、轻微倾斜 */
+  .grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:28px}
+  .pcard{background:#fff;padding:26px 28px;border:1px solid rgba(42,38,34,.1);box-shadow:4px 5px 0 rgba(42,38,34,.08);cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.3,1), box-shadow .35s;position:relative}
+  .pcard:nth-child(odd){transform:rotate(-.6deg)}
+  .pcard:nth-child(even){transform:rotate(.7deg)}
+  .pcard:hover{transform:rotate(0deg) translateY(-4px);box-shadow:6px 10px 0 rgba(42,38,34,.1)}
+  .pcard .stamp{position:absolute;top:-10px;right:18px;background:var(--rose);color:#fff;font-family:'Caveat',cursive;font-size:18px;padding:2px 12px;transform:rotate(4deg)}
+  .pcard h3{font-family:'Noto Serif SC',serif;font-weight:700;font-size:24px;margin-top:6px}
+  .pcard .sub{font-family:'Quicksand',sans-serif;font-size:13px;color:var(--ink-soft);margin-top:4px;letter-spacing:.02em}
+  .pcard p{font-size:15px;line-height:1.85;margin-top:14px;color:#48402F}
+  .pcard .tags{display:flex;gap:8px;margin-top:18px}
+  .pcard .tag{font-family:'Quicksand',sans-serif;font-size:11px;font-weight:600;background:var(--cream);color:var(--ink);padding:3px 10px;letter-spacing:.04em}
+
+  /* 文学卡片：纸条样式 */
+  .wlist{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .wcard{background:var(--paper-2);padding:24px 28px 30px;border-left:3px solid var(--rose);cursor:pointer;transition:transform .3s, background .3s}
+  .wcard:nth-child(2){border-left-color:var(--blue)}
+  .wcard:nth-child(3){border-left-color:var(--olive)}
+  .wcard:hover{background:var(--cream);transform:translateY(-3px)}
+  .wcard .kind{font-family:'Caveat',cursive;font-size:24px;color:var(--rose);line-height:1}
+  .wcard:nth-child(2) .kind{color:var(--blue)}
+  .wcard:nth-child(3) .kind{color:var(--olive)}
+  .wcard h4{font-family:'Noto Serif SC',serif;font-weight:600;font-size:22px;margin-top:6px}
+  .wcard .excerpt{font-size:14.5px;line-height:1.9;margin-top:10px;color:#3E382E;white-space:pre-line}
+  .wcard .date{font-family:'Quicksand',sans-serif;font-size:11px;color:var(--ink-soft);margin-top:14px;letter-spacing:.06em}
+
+  /* footer */
+  footer{margin-top:110px;padding-top:24px;border-top:1px dashed rgba(42,38,34,.25);display:flex;justify-content:space-between;align-items:center}
+  footer .signoff{font-family:'Caveat',cursive;font-size:24px;color:var(--blue)}
+  footer .links{font-family:'Quicksand',sans-serif;font-size:13px;color:var(--ink-soft)}
+  footer .links a:hover{color:var(--rose)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <span class="brand">日暮途远</span>
+    <ul>
+      <li><a href="#">首页</a></li>
+      <li><a href="#">项目</a></li>
+      <li><a href="#">文学</a></li>
+      <li><a href="#">日志</a></li>
+      <li><a href="#">关于</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <h1>路还长，<br>马还瘦，<span class="accent">没事的</span></h1>
+      <!-- 手绘波浪 -->
+      <svg class="doodle-line" viewBox="0 0 230 14" fill="none">
+        <path d="M2 8 Q40 0 80 8 T160 8 T228 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <p>写在 2025 年的第 200 天。<br>
+      这里装着我做过的东西、读过的几条路，<span class="hl">和一些没处安放的字</span>。<br>
+      欢迎随便翻。</p>
+    </div>
+    <div class="card-photo">
+      <div class="ph">"夜很长，<br>但灯一直亮着。"</div>
+      <div class="cap">— 今年的某个夜</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <span class="hand">在做的事</span>
+      <span class="en">PROJECTS</span>
+      <svg class="squiggle" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none">
+        <path d="M0 4 Q25 0 50 4 T100 4 T150 4 T200 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="grid">
+      <div class="pcard">
+        <span class="stamp">参赛中</span>
+        <h3>吃惑 EatConfusion</h3>
+        <div class="sub">AI 智能膳食管理 App</div>
+        <p>用 AI 接管"今天吃啥"——拍照识别热量、清空冰箱生成菜谱、会说人话的饭搭子。</p>
+        <div class="tags">
+          <span class="tag">AI</span>
+          <span class="tag">全栈</span>
+          <span class="tag">2025</span>
+        </div>
+      </div>
+      <div class="pcard">
+        <span class="stamp">开发中</span>
+        <h3>student-agent</h3>
+        <div class="sub">会自学的学习型 Agent</div>
+        <p>给它一个目标，它替你跑完查资料、动手做、回头检查的整条流程。</p>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">Agent</span>
+          <span class="tag">2025</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <span class="hand">没处安放的字</span>
+      <span class="en">WRITINGS</span>
+      <svg class="squiggle" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none">
+        <path d="M0 4 Q25 0 50 4 T100 4 T150 4 T200 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="wlist">
+      <div class="wcard">
+        <span class="kind">— 诗 —</span>
+        <h4>途中</h4>
+        <div class="excerpt">日头落进山的缺口，
+马把影子拖得很长很长。</div>
+        <div class="date">2025.05.18</div>
+      </div>
+      <div class="wcard">
+        <span class="kind">— 散文 —</span>
+        <h4>夜里写代码的人</h4>
+        <div class="excerpt">凌晨两点的报错，是这个世界对你最诚实的回应——它从不撒谎，也从不安慰。</div>
+        <div class="date">2025.04.02</div>
+      </div>
+      <div class="wcard">
+        <span class="kind">— 小说 —</span>
+        <h4>马灯</h4>
+        <div class="excerpt">赶夜路的人不怕路远，只怕灯灭。马瘦不要紧，灯不能灭。</div>
+        <div class="date">2025.02.21</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="signoff">— 明天见 —</span>
+    <span class="links"><a href="#">GitHub</a> · <a href="#">RSS</a> · <a href="#">Mail</a></span>
+  </footer>
+
+</div>
+</body>
+</html>

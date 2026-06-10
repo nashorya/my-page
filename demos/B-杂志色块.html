@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方案 B · 杂志色块 — 日暮途远</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Public+Sans:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --paper:#F2E8D5;--paper-2:#EADFC4;--ink:#1A1814;
+    --green:#2E4A3F;--brick:#B14B3A;--mustard:#D4A23A;--blue:#324A6B;
+    --rule:rgba(26,24,20,.16);
+  }
+  html,body{background:var(--paper);min-height:100vh}
+  body{font-family:'Public Sans',-apple-system,sans-serif;color:var(--ink);
+    -webkit-font-smoothing:antialiased;line-height:1.55}
+  ::selection{background:var(--brick);color:var(--paper)}
+  a{color:inherit;text-decoration:none}
+  @keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  @keyframes slide-in{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:none}}
+
+  .wrap{max-width:1140px;margin:0 auto;padding:0 48px}
+
+  /* nav — 一条粗黑横条上 */
+  nav{background:var(--ink);color:var(--paper);padding:14px 0}
+  nav .inner{max-width:1140px;margin:0 auto;padding:0 48px;display:flex;align-items:center;gap:36px}
+  nav .brand{font-family:'Libre Bodoni',serif;font-weight:700;font-size:21px;letter-spacing:.01em}
+  nav ul{list-style:none;display:flex;gap:28px;margin-left:auto}
+  nav a{font-family:'Public Sans',sans-serif;font-size:13px;font-weight:500;color:rgba(242,232,213,.78);letter-spacing:.04em;transition:color .2s}
+  nav a:hover{color:var(--mustard)}
+
+  /* HERO — 巨型 Bodoni 标题 + 不对称色块 */
+  .hero{display:grid;grid-template-columns:1.4fr 1fr;gap:0;margin-top:42px;animation:fade-up 1s ease both}
+  .hero .left{padding:14px 24px 18px 0}
+  .hero .kicker{display:inline-block;background:var(--ink);color:var(--paper);font-family:'Public Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;padding:5px 11px;text-transform:uppercase;margin-bottom:18px}
+  .hero h1{font-family:'Libre Bodoni',serif;font-weight:800;font-size:clamp(72px,11vw,168px);line-height:.88;letter-spacing:-.025em;color:var(--ink)}
+  .hero h1 em{font-style:italic;font-weight:400;color:var(--brick)}
+  .hero p{margin-top:28px;max-width:440px;font-size:17px;line-height:1.75;color:#3A352B}
+  .hero .right{background:var(--green);color:var(--paper);padding:46px 36px;display:flex;flex-direction:column;justify-content:space-between;min-height:340px}
+  .hero .right .stat{font-family:'Libre Bodoni',serif;font-weight:700;font-style:italic;font-size:88px;line-height:.95;color:var(--mustard)}
+  .hero .right .stat-l{font-family:'Public Sans',sans-serif;font-size:13px;color:rgba(242,232,213,.7);letter-spacing:.1em;margin-top:6px;text-transform:uppercase}
+  .hero .right .author{font-family:'Libre Bodoni',serif;font-style:italic;font-size:22px;color:var(--paper)}
+  .hero .right .author small{display:block;font-family:'Public Sans',sans-serif;font-style:normal;font-size:12px;color:rgba(242,232,213,.6);margin-top:4px;letter-spacing:.06em}
+
+  /* 章节标题：实色色条 */
+  .chap{margin-top:80px;display:flex;align-items:center;gap:16px;animation:slide-in .5s ease both}
+  .chap .tag{background:var(--ink);color:var(--paper);font-family:'Public Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.18em;padding:6px 13px;text-transform:uppercase}
+  .chap h2{font-family:'Libre Bodoni',serif;font-weight:700;font-style:italic;font-size:44px;letter-spacing:-.01em}
+  .chap .line{flex:1;height:1px;background:var(--ink)}
+
+  /* 两栏并排——色块版 */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}
+  .card{padding:36px 32px;color:var(--paper);display:flex;flex-direction:column;justify-content:space-between;min-height:260px;cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.3,1)}
+  .card:hover{transform:translateY(-4px)}
+  .card.brick{background:var(--brick)}
+  .card.mustard{background:var(--mustard);color:var(--ink)}
+  .card.green{background:var(--green)}
+  .card.blue{background:var(--blue)}
+  .card .cat{font-family:'Public Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+  .card h3{font-family:'Libre Bodoni',serif;font-weight:700;font-size:36px;line-height:1.05;margin-top:14px;letter-spacing:-.01em}
+  .card p{font-family:'Noto Serif SC',serif;font-size:14.5px;line-height:1.8;margin-top:14px;opacity:.88}
+  .card .more{margin-top:24px;font-family:'Libre Bodoni',serif;font-style:italic;font-size:15px;opacity:.85;display:inline-flex;align-items:center;gap:8px}
+  .card .more::after{content:'→';transition:transform .25s}
+  .card:hover .more::after{transform:translateX(4px)}
+
+  /* 文学单列大尺寸 */
+  .read-feat{margin-top:18px;padding:54px 60px;background:var(--ink);color:var(--paper);display:grid;grid-template-columns:1fr 2fr;gap:48px;align-items:center;cursor:pointer}
+  .read-feat .label{font-family:'Public Sans',sans-serif;font-size:12px;font-weight:700;color:var(--mustard);letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px}
+  .read-feat h3{font-family:'Libre Bodoni',serif;font-weight:700;font-style:italic;font-size:64px;line-height:1;letter-spacing:-.015em}
+  .read-feat .poem{font-family:'Noto Serif SC',serif;font-size:18px;line-height:2;white-space:pre-line;color:rgba(242,232,213,.92)}
+
+  footer{margin:120px 0 0;background:var(--ink);color:var(--paper);padding:30px 0}
+  footer .inner{max-width:1140px;margin:0 auto;padding:0 48px;display:flex;justify-content:space-between;align-items:center;font-family:'Public Sans',sans-serif;font-size:12px;letter-spacing:.04em}
+  footer a{color:var(--mustard)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="inner">
+    <span class="brand">日暮途远</span>
+    <ul>
+      <li><a href="#">首页</a></li>
+      <li><a href="#">项目</a></li>
+      <li><a href="#">文学</a></li>
+      <li><a href="#">日志</a></li>
+      <li><a href="#">关于</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="left">
+      <span class="kicker">第 06 期 · 2025 盛夏</span>
+      <h1>日暮<em>途远，</em><br>马瘦毛长</h1>
+      <p>一份不定期出的个人文集。装写过的东西、做过的东西、和走过的几段不长不短的路。</p>
+    </div>
+    <div class="right">
+      <div>
+        <div class="stat">04</div>
+        <div class="stat-l">PROJECTS</div>
+      </div>
+      <div>
+        <div class="stat">12</div>
+        <div class="stat-l">WRITINGS</div>
+      </div>
+      <div class="author">
+        Ya
+        <small>@student-agent</small>
+      </div>
+    </div>
+  </section>
+
+  <div class="chap">
+    <span class="tag">CH 01</span>
+    <h2>项目</h2>
+    <span class="line"></span>
+  </div>
+  <div class="grid2">
+    <div class="card brick">
+      <div>
+        <span class="cat">参赛 · 2025</span>
+        <h3>吃惑<br>EatConfusion</h3>
+      </div>
+      <div>
+        <p>用 AI 接管"今天吃啥"——拍照识别热量、清空冰箱生成菜谱、会说人话的饭搭子。</p>
+        <span class="more">展开</span>
+      </div>
+    </div>
+    <div class="card green">
+      <div>
+        <span class="cat">开发中 · 2025</span>
+        <h3>student-<br>agent</h3>
+      </div>
+      <div>
+        <p>给它一个目标，它替你跑完查、做、回头检查的整条流程。会自学的学习型智能体。</p>
+        <span class="more">展开</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="chap">
+    <span class="tag">CH 02</span>
+    <h2>文学</h2>
+    <span class="line"></span>
+  </div>
+  <div class="read-feat">
+    <div>
+      <span class="label">本期推荐</span>
+      <h3>冬至</h3>
+    </div>
+    <div class="poem">今天的夜最长。
+我把这句话念给自己听，
+像往火堆里添一根柴：
+今天的夜最长——
+所以今天之后，
+每一天，都在悄悄变亮。</div>
+  </div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card mustard">
+      <div>
+        <span class="cat">散文</span>
+        <h3>夜里写代码<br>的人</h3>
+      </div>
+      <div>
+        <p>凌晨两点的报错，是这个世界对你最诚实的回应——它从不撒谎，也从不安慰。</p>
+        <span class="more">阅读</span>
+      </div>
+    </div>
+    <div class="card blue">
+      <div>
+        <span class="cat">小说</span>
+        <h3>马灯</h3>
+      </div>
+      <div>
+        <p>赶夜路的人不怕路远，只怕灯灭。马瘦不要紧，灯不能灭。</p>
+        <span class="more">阅读</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="inner">
+    <span>© 2025 日暮途远</span>
+    <span><a href="#">GitHub</a> · <a href="#">RSS</a> · <a href="#">Mail</a></span>
+  </div>
+</footer>
+</body>
+</html>

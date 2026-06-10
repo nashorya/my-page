@@ -1,0 +1,18 @@
+---
+interface Props {
+  prevHref?: string;
+  prevLabel?: string;
+  nextHref?: string;
+  nextLabel?: string;
+  centerHref?: string;
+  centerLabel?: string;
+}
+
+const { prevHref, prevLabel, nextHref, nextLabel, centerHref, centerLabel } = Astro.props;
+---
+
+<div class="chap-pager">
+  {prevHref && prevLabel ? <a href={prevHref}>← {prevLabel}</a> : <span></span>}
+  {centerHref && centerLabel ? <a href={centerHref}>{centerLabel}</a> : <span></span>}
+  {nextHref && nextLabel ? <a href={nextHref}>{nextLabel} →</a> : <span></span>}
+</div>

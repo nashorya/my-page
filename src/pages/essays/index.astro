@@ -1,0 +1,47 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionHead from "../../components/SectionHead.astro";
+import { byOrder } from "../../lib/content";
+
+const essays = (await getCollection("essays")).sort(byOrder);
+const bits = (await getCollection("bits")).sort(byOrder);
+---
+
+<BaseLayout title="随笔 · 日暮途远" active="essays">
+  <div class="wrap page-enter">
+    <section class="sec" style="margin-top: 60px;">
+      <SectionHead hand="随笔" en="ESSAYS" />
+      <div class="list-flat">
+        {essays.map((essay) => (
+          <a class="row kind-sj reveal" href={`/essays/${essay.id}/`}>
+            <span class="kind">— 随 —</span>
+            <div>
+              <h4>{essay.data.title}</h4>
+              <div class="sub">{essay.data.sub}</div>
+            </div>
+            <span class="read">{essay.data.reading}</span>
+            <span class="date">{essay.data.date}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec">
+      <SectionHead hand="段子" en="BITS" />
+      <div class="list-flat">
+        {bits.map((bit) => (
+          <a class="row kind-dz reveal" href={`/bits/${bit.id}/`}>
+            <span class="kind">— 段 —</span>
+            <div>
+              <h4>{bit.data.title}</h4>
+              <div class="sub">{bit.data.sub}</div>
+            </div>
+            <span class="read">{bit.data.reading}</span>
+            <span class="date">{bit.data.date}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

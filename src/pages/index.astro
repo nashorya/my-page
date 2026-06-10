@@ -1,0 +1,137 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SectionHead from "../components/SectionHead.astro";
+import { site, collections as collectionMetas, novels, projects } from "../data/generated";
+import { byOrder, collectionPiecePath, chapterPath, slugTail } from "../lib/content";
+
+const collectionEntries = (await getCollection("collections")).filter((entry) => !entry.data.appendix).sort(byOrder);
+const essayEntries = (await getCollection("essays")).sort(byOrder);
+const bitEntries = (await getCollection("bits")).sort(byOrder);
+
+const piecesByCollection = new Map<string, typeof collectionEntries>();
+for (const collection of collectionMetas) {
+  piecesByCollection.set(collection.id, collectionEntries.filter((entry) => entry.data.collection === collection.id).sort(byOrder));
+}
+
+const heroHref = collectionPiecePath(site.hero_target.col, site.hero_target.piece);
+---
+
+<BaseLayout title={site.title} active="home">
+  <div class="wrap page-enter">
+    <section class="hero">
+      <div>
+        <div class="reveal">
+          <h1>路还长，<br />马还瘦，<span class="accent">没事的</span></h1>
+          <svg class="doodle" viewBox="0 0 230 14" fill="none">
+            <path d="M2 8 Q40 0 80 8 T160 8 T228 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+          </svg>
+          <div class="intro">
+            {site.intro_lines.map((line, index) => (
+              <div>{index === 1 ? <span class="hl">{line}</span> : line}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <a class="quote-card" href={heroHref}>
+          <div class="qbox">
+            "{site.hero_quote[0]}<br />{site.hero_quote[1]}"<em>— 堂吉诃德</em>
+          </div>
+          <div class="cap">— {site.hero_from_label}</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="sec">
+      <SectionHead hand="两本小说集" en="COLLECTIONS" />
+      <div class="col-grid">
+        {collectionMetas.map((collection) => {
+          const pieces = piecesByCollection.get(collection.id) || [];
+          const firstPiece = pieces[0];
+          return (
+            <a class="col-card reveal" href={firstPiece ? collectionPiecePath(collection.id, slugTail(firstPiece.id)) : "/novels/"}>
+              <span class="label">{collection.dedication ? "小说集" : "短篇集"}</span>
+              <h3>《{collection.name}》</h3>
+              {collection.dedication && <div class="dedi">{collection.dedication}</div>}
+              <div class="pieces">
+                {pieces.map((piece, index) => (
+                  <div class="p">
+                    <span class="n">{String(index + 1).padStart(2, "0")}</span>
+                    <span class="t">{piece.data.title}</span>
+                  </div>
+                ))}
+              </div>
+              <span class="more">翻开</span>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="sec">
+      <SectionHead hand="在写的长篇" en="NOVELS · WIP" />
+      <div class="novel-grid">
+        {novels.map((novel) => {
+          const cls = novel.id.includes("miso") ? "miso" : "weird";
+          return (
+            <a class={`novel-card ${cls} reveal`} href={`/novels/${novel.id}/`}>
+              <span class="stamp">{novel.status}</span>
+              <span class="label">长篇连载</span>
+              <h3>《{novel.title}》</h3>
+              <div class="sub">{novel.subtitle}</div>
+              <p>{novel.synopsis}</p>
+              <div class="meta">
+                <span>{novel.date}</span>
+                <span class="chs">{novel.chapters.length} 章</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="sec">
+      <SectionHead hand="没处安放的字" en="ESSAYS" />
+      <div class="list-flat">
+        {essayEntries.map((essay) => (
+          <a class="row kind-sj reveal" href={`/essays/${essay.id}/`}>
+            <span class="kind">— 随 —</span>
+            <div>
+              <h4>{essay.data.title}</h4>
+              <div class="sub">{essay.data.sub}</div>
+            </div>
+            <span class="read">{essay.data.reading}</span>
+            <span class="date">{essay.data.date}</span>
+          </a>
+        ))}
+        {bitEntries.map((bit) => (
+          <a class="row kind-dz reveal" href={`/bits/${bit.id}/`}>
+            <span class="kind">— 段 —</span>
+            <div>
+              <h4>{bit.data.title}</h4>
+              <div class="sub">{bit.data.sub}</div>
+            </div>
+            <span class="read">{bit.data.reading}</span>
+            <span class="date">{bit.data.date}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="sec">
+      <SectionHead hand="做过的项目" en="PROJECTS" />
+      <div class="proj-grid">
+        {projects.map((project) => (
+          <a class="pcard reveal" href={project.github} target="_blank" rel="noopener">
+            <span class="stamp">{project.status}</span>
+            <h3>{project.name}</h3>
+            <div class="sub">{project.sub}</div>
+            <p>{project.desc}</p>
+            <div class="tags">{project.tags.map((tag) => <span class="tag">{tag}</span>)}</div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
